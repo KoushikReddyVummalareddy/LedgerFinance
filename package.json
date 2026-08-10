@@ -1,0 +1,32 @@
+{
+	"private": true,
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"prettier": "prettier \"resources/**/*.vue\" --write"
+	},
+	"devDependencies": {
+		"@iconify-json/lucide": "^1.2.116",
+		"@tailwindcss/vite": "^4.1.13",
+		"@vitejs/plugin-vue": "^5.2.3",
+		"laravel-vite-plugin": "^1.2.0",
+		"prettier": "^3.6.2",
+		"tailwindcss": "^4.1.13",
+		"typescript": "^5.8.0",
+		"vite": "^6.2.4",
+		"vue-tsc": "^2.2.8"
+	},
+	"dependencies": {
+		"@fontsource-variable/inter": "^5.2.6",
+		"@nuxt/ui": "4.0.0-alpha.2",
+		"@vue-flow/background": "^1.3.2",
+		"@vue-flow/controls": "^1.1.3",
+		"@vue-flow/core": "^1.48.2",
+		"axios": "^1.12.2",
+		"pinia": "^3.0.1",
+		"pinia-plugin-persistedstate": "^4.2.0",
+		"vue": "^3.5.13",
+		"vue-router": "^4.5.0",
+		"vue3-org-chart": "^0.2.5"
+	}
+}
