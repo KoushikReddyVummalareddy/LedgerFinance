@@ -1,41 +1,44 @@
-**LedgerFinance – Expense Tracker**
+# LedgerFinance
 
-LedgerFinance is a full-stack personal finance management application that allows users to securely track their income and expenses, view their financial summary, and manage their transaction history.
+A modern full-stack personal finance management application for securely tracking income, expenses, and financial activity.
 
-The application is built with Vue 3, TypeScript, Tailwind CSS, and Nuxt UI components on the frontend, with Laravel and MySQL powering the backend.
+LedgerFinance is a web-based expense tracking application built with **Vue 3 and Laravel**. It provides authenticated users with a centralized platform to manage transactions, monitor their financial position, and quickly search or filter their transaction history.
 
-✨ Features
-🔐 User Registration
+## Overview
 
-Users can create an account to securely manage their financial data.
+LedgerFinance is designed around a simple financial workflow:
 
-Register with name, email, and password.
-Email must be unique.
-Passwords are securely hashed.
-Validation for registration data.
-🔑 Login
+**Authenticate → View Dashboard → Manage Transactions → Analyze Financial Activity**
 
-Users can securely access their personal financial records.
+The application separates frontend presentation and interaction from backend business logic and data persistence through a RESTful API architecture.
 
-Login with valid credentials.
-Invalid credentials display an error.
-Authentication is required to access protected features.
+## Key Features
 
-📊 Dashboard
+### Authentication & User Management
 
-The dashboard provides an overview of the user's financial status.
+- User registration with name, email, and password
+- Unique email validation
+- Secure password hashing
+- User authentication
+- Protected application functionality
+- Secure logout
 
-Total Income
-Total Expenses
-Current Balance
-Recent Transactions
+### Financial Dashboard
 
-The current balance is calculated as:
+Provides a quick overview of the user's financial activity:
 
+- Total income
+- Total expenses
+- Current balance
+- Recent transactions
+
+The current balance is calculated using:
+
+text
 Current Balance = Total Income - Total Expenses
-💰 Add Transaction
+Transaction Management
 
-Users can record both income and expense transactions.
+Users can manage their financial transactions through a complete CRUD workflow.
 
 Each transaction contains:
 
@@ -45,178 +48,141 @@ Type
 Category
 Date
 
-Supported transaction types:
+Supported operations:
 
-Income
-Expense
-📋 View Transactions
+Create transactions
+View transactions
+Update transactions
+Delete transactions
+Review transaction history
+Search & Filtering
 
-Users can view their complete transaction history.
-
-Each transaction displays:
-
-Title
-Amount
-Category
-Type
-Date
-
-Transactions are displayed with the latest transactions first.
-
-✏️ Edit Transaction
-
-Users can modify existing transactions.
-
-Existing transaction data is pre-filled.
-Users can update the transaction details.
-Updated data is saved successfully.
-🗑️ Delete Transaction
-
-Users can remove transactions they no longer need.
-
-Delete confirmation is displayed.
-Transaction is permanently removed after confirmation.
-🔎 Filter Transactions
-
-Users can filter their transaction history based on:
+The transaction history can be refined using:
 
 Transaction type
 Category
 Date range
-🔍 Search Transactions
+Title-based search
 
-Users can quickly find transactions by searching their title.
+Transactions are displayed in latest-first order to provide quick access to recent financial activity.
 
-Search by transaction title.
-Display matching transactions.
-🚪 Logout
-
-Users can securely end their session.
-
-Ends the authenticated session.
-Redirects the user to the login page.
-🛠️ Tech Stack
-Frontend
-Vue 3
-TypeScript
-Vite
-Tailwind CSS
-Nuxt UI Components
-Axios
-Vue Router
-HTML5
-CSS
-Backend
-Laravel
-PHP
-RESTful APIs
-Eloquent ORM
-Laravel Request Validation
-Database
-MySQL
-🏗️ Application Architecture
-                         LedgerFinance
-                              │
-             ┌────────────────┴────────────────┐
-             │                                 │
-        Vue Frontend                     Laravel Backend
-             │                                 │
-     ┌───────┴────────┐                ┌───────┴────────┐
-     │                │                │                │
-   Views         Components        Controllers      Services
-     │                │                │                │
-     └────────┬───────┘                └────────┬───────┘
-              │                                 │
-           Axios ───────── REST API ────────────┘
-                                                │
-                                                │
-                                             Eloquent
-                                                │
-                                                ▼
-                                             MySQL
-📁 Project Structure
+Technology Stack
+Layer	Technology
+Frontend	Vue 3
+Language	TypeScript
+Build Tool	Vite
+UI Styling	Tailwind CSS
+UI Components	Nuxt UI
+HTTP Client	Axios
+Routing	Vue Router
+Backend	Laravel
+Backend Language	PHP
+ORM	Eloquent
+API	RESTful API
+Database	MySQL
+Architecture
+┌─────────────────────────────────────────────┐
+│                  User                       │
+└──────────────────────┬──────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────┐
+│              Vue 3 Frontend                 │
+│                                             │
+│  Views → Components → Composables →         │
+│                  Services                   │
+└──────────────────────┬──────────────────────┘
+                       │
+                       │ REST API
+                       ▼
+┌─────────────────────────────────────────────┐
+│             Laravel Backend                 │
+│                                             │
+│  Routes → Controllers → Requests →          │
+│              Services → Models              │
+└──────────────────────┬──────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────┐
+│                  MySQL                      │
+└─────────────────────────────────────────────┘
+Project Structure
 LedgerFinance/
 │
-├── database/                       # Database migrations, seeders and factories
+├── database/
+│   ├── factories/             # Model factories
+│   ├── migrations/            # Database migrations
+│   └── seeders/               # Database seeders
 │
-├── public/                         # Public assets
+├── public/                    # Public application assets
 │
 ├── resources/
-│   ├── css/                        # Tailwind CSS and application styles
+│   ├── css/                   # Tailwind CSS and application styles
 │   │
-│   └── js/                         # Vue frontend application
-│       ├── components/             # Reusable Vue components
-│       ├── composables/            # Reusable Vue composables
-│       ├── configs/                # Frontend configuration
-│       ├── enums/                  # Frontend enums
-│       ├── interfaces/             # TypeScript interfaces
-│       ├── models/                 # Frontend models
-│       ├── router/                 # Vue Router configuration
-│       ├── services/               # API service layer
-│       ├── store/                  # Application state management
-│       ├── views/                  # Application pages/views
-│       ├── app.ts                  # Vue application entry point
-│       └── vite-env.d.ts           # Vite TypeScript definitions
+│   └── js/                    # Vue frontend application
+│       ├── components/        # Reusable UI components
+│       ├── composables/       # Reusable Vue composables
+│       ├── configs/           # Frontend configuration
+│       ├── enums/             # Frontend enums
+│       ├── interfaces/        # TypeScript interfaces
+│       ├── models/            # Frontend models
+│       ├── router/            # Vue Router configuration
+│       ├── services/          # API communication layer
+│       ├── store/             # Application state management
+│       └── views/             # Application pages
 │
-├── routes/                         # Laravel API routes
+├── routes/                    # Laravel API routes
 │
-├── src/                            # Laravel backend application
-│   ├── Contracts/
-│   │   └── Services/               # Service contracts/interfaces
+├── src/
+│   ├── Contracts/             # Service contracts
 │   │
 │   ├── Http/
-│   │   ├── Controllers/            # API controllers
-│   │   ├── Requests/               # Request validation
-│   │   └── Resources/              # API resources
+│   │   ├── Controllers/       # API controllers
+│   │   ├── Requests/          # Request validation
+│   │   └── Resources/         # API response resources
 │   │
-│   ├── Models/                     # Eloquent models
-│   ├── Providers/                  # Laravel service providers
-│   └── Services/                   # Business logic and services
+│   ├── Models/                # Eloquent models
+│   ├── Providers/             # Laravel service providers
+│   └── Services/              # Business logic
 │
-├── storage/                        # Laravel storage and logs
+├── storage/                   # Application storage and logs
+├── tests/                     # Automated tests
 │
-├── tests/                          # Automated tests
-│
-├── vendor/                         # PHP dependencies
-│
-├── .env.example                    # Environment configuration example
-├── .gitignore
-├── artisan                         # Laravel Artisan CLI
-├── composer.json                   # PHP dependencies
-├── package.json                    # Node.js dependencies
+├── artisan                    # Laravel CLI
+├── composer.json              # PHP dependencies
+├── package.json               # Frontend dependencies
 └── README.md
-🚀 Getting Started
+Getting Started
 Prerequisites
 
-Make sure the following are installed:
+Ensure the following are installed:
 
 PHP 8.x
 Composer
 Node.js
 npm
 MySQL
+
 Git
-📥 Installation
 1. Clone the Repository
 git clone git@github-personal:KoushikReddyVummalareddy/LedgerFinance.git
 cd LedgerFinance
-2. Install PHP Dependencies
+2. Install Backend Dependencies
 composer install
 3. Install Frontend Dependencies
 npm install
-4. Create Environment File
+4. Configure Environment
+
+Create the Laravel environment file:
+
 cp .env.example .env
-5. Generate Laravel Application Key
+
+Generate the application key:
+
 php artisan key:generate
-🗄️ Database Configuration
+5. Configure Database
 
-Create a MySQL database for the application.
-
-For example:
-
-ledger_finance
-
-Configure your .env file:
+Update the database configuration in .env:
 
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -225,210 +191,57 @@ DB_DATABASE=ledger_finance
 DB_USERNAME=root
 DB_PASSWORD=
 
-Update the database credentials according to your local MySQL configuration.
+Create the ledger_finance database in MySQL and run:
 
-Run Database Migrations
 php artisan migrate
+6. Configure Frontend API
 
-If seeders are available and you want to populate sample data:
-
-php artisan db:seed
-
-Or:
-
-php artisan migrate --seed
-⚙️ Frontend Configuration
-
-Configure the frontend API URL in your environment file.
-
-For example:
+Configure the backend API URL according to your local environment:
 
 VITE_API_BASE_URL=http://127.0.0.1:8000
+7. Start the Application
 
-Make sure the URL matches the Laravel backend URL used in your local environment.
+Start the Laravel backend:
 
-▶️ Running the Application
-
-The frontend and backend should be started separately during development.
-
-Start Laravel Backend
 php artisan serve
 
-The backend will typically be available at:
+In a separate terminal, start the Vue development server:
 
-http://127.0.0.1:8000
-Start Vue Frontend
 npm run dev
+API Responsibilities
 
-Vite will display the frontend URL in the terminal, typically:
+The backend provides RESTful endpoints for the application's core functionality.
 
-http://localhost:5173
-🔌 API Overview
+Area	Operations
+Authentication	Register, Login, Logout
+Dashboard	Financial summary, Recent transactions
+Transactions	Create, Read, Update, Delete
+Filtering	Type, Category, Date range
+Search	Transaction title
 
-The Laravel backend exposes RESTful APIs for authentication, dashboard data, and transaction management.
+The frontend communicates with these APIs through the dedicated service layer.
 
-Feature	Method	Purpose
-Register	POST	Create a new user
-Login	POST	Authenticate user
-Logout	POST	End user session
-Dashboard	GET	Retrieve financial summary
-Transactions	GET	Retrieve transactions
-Add Transaction	POST	Create a transaction
-View Transaction	GET	Retrieve a transaction
-Edit Transaction	PUT/PATCH	Update a transaction
-Delete Transaction	DELETE	Delete a transaction
-Filter Transactions	GET	Filter transactions
-Search Transactions	GET	Search transactions by title
+Security
 
-The exact API paths depend on the route definitions in the Laravel application.
+Security considerations implemented within the application include:
 
-💵 Transaction Types
+Password hashing before persistence
+Authentication for protected functionality
+Unique email validation
+Server-side request validation
+User-specific transaction access
+Protected transaction operations
+Secure logout handling
 
-LedgerFinance supports two transaction types.
+Sensitive environment configuration such as database credentials should be maintained in .env and should not be committed to version control.
 
-Income
-
-Represents money received by the user.
-
-Examples:
-
-Salary
-Freelance income
-Bonus
-Other income
-Expense
-
-Represents money spent by the user.
-
-Examples:
-
-Food
-Shopping
-Transportation
-Bills
-Entertainment
-🔐 Security
-
-The application includes several security and validation measures:
-
-Secure password hashing.
-Unique email validation.
-Authentication-protected routes.
-User-specific financial data.
-Backend request validation.
-Authenticated logout.
-Protected transaction operations.
-
-Users can only access and manage their own financial records.
-
-👤 User Stories
-
-The following user stories have been implemented:
-
-User Story	Status
-User Registration	✅ Completed
-Login	✅ Completed
-Dashboard	✅ Completed
-Add Transaction	✅ Completed
-View Transactions	✅ Completed
-Edit Transaction	✅ Completed
-Delete Transaction	✅ Completed
-Filter Transactions	✅ Completed
-Search Transactions	✅ Completed
-Logout	✅ Completed
-📌 Acceptance Criteria
-User Registration
- Register with name, email, and password.
- Email must be unique.
- Password is securely hashed.
-Login
- Valid credentials allow login.
- Invalid credentials display an error.
-Dashboard
- Display total income.
- Display total expenses.
- Display current balance.
- Display recent transactions.
-Add Transaction
- Enter title.
- Enter amount.
- Select transaction type.
- Select category.
- Select date.
- Save transaction successfully.
-View Transactions
- List all transactions.
- Display title, amount, category, type, and date.
- Display latest transactions first.
-Edit Transaction
- Pre-fill existing transaction data.
- Save updated transaction.
-Delete Transaction
- Display delete confirmation.
- Permanently delete the transaction.
-Filter Transactions
- Filter by transaction type.
- Filter by category.
- Filter by date range.
-Search Transactions
- Search transactions by title.
- Display matching results.
-Logout
- End the user session.
- Redirect to the login page.
-🧪 Testing
-
-Run the Laravel test suite with:
+Run the Laravel test suite using:
 
 php artisan test
 
-You can also run a specific test:
+Build the frontend for production:
 
-php artisan test --filter=TestName
-🔄 Development Workflow
+npm run build
+Future Enhancements
 
-A typical development workflow for the project is:
-
-User Action
-    ↓
-Vue Component
-    ↓
-Composable / Service
-    ↓
-Axios API Request
-    ↓
-Laravel Route
-    ↓
-Controller
-    ↓
-Request Validation
-    ↓
-Service Layer
-    ↓
-Eloquent Model
-    ↓
-MySQL
-    ↓
-API Response
-    ↓
-Vue UI Update
-
-This separation keeps the frontend presentation logic, API communication, backend business logic, and database operations organized.
-
-📈 Future Improvements
-
-Potential future enhancements include:
-
-Monthly and yearly financial reports.
-Expense and income charts.
-Budget management.
-Export transactions to CSV/Excel.
-Recurring transactions.
-Financial analytics.
-Notifications and reminders.
-Dark mode.
-Improved mobile responsiveness.
-Pagination for large transaction histories.
-📄 License
-
-This project was developed as a personal finance tracking application for learning, development, and demonstration purposes.
+This project is developed as a personal finance management application for learning, development, and portfolio purposes.
