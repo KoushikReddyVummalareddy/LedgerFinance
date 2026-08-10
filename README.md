@@ -1,58 +1,434 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+**LedgerFinance – Expense Tracker**
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+LedgerFinance is a full-stack personal finance management application that allows users to securely track their income and expenses, view their financial summary, and manage their transaction history.
 
-## About Laravel
+The application is built with Vue 3, TypeScript, Tailwind CSS, and Nuxt UI components on the frontend, with Laravel and MySQL powering the backend.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+✨ Features
+🔐 User Registration
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Users can create an account to securely manage their financial data.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Register with name, email, and password.
+Email must be unique.
+Passwords are securely hashed.
+Validation for registration data.
+🔑 Login
 
-## Learning Laravel
+Users can securely access their personal financial records.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Login with valid credentials.
+Invalid credentials display an error.
+Authentication is required to access protected features.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+📊 Dashboard
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+The dashboard provides an overview of the user's financial status.
 
-## Agentic Development
+Total Income
+Total Expenses
+Current Balance
+Recent Transactions
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+The current balance is calculated as:
 
-```bash
-composer require laravel/boost --dev
+Current Balance = Total Income - Total Expenses
+💰 Add Transaction
 
-php artisan boost:install
-```
+Users can record both income and expense transactions.
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Each transaction contains:
 
-## Contributing
+Title
+Amount
+Type
+Category
+Date
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Supported transaction types:
 
-## Code of Conduct
+Income
+Expense
+📋 View Transactions
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Users can view their complete transaction history.
 
-## Security Vulnerabilities
+Each transaction displays:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Title
+Amount
+Category
+Type
+Date
 
-## License
+Transactions are displayed with the latest transactions first.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+✏️ Edit Transaction
+
+Users can modify existing transactions.
+
+Existing transaction data is pre-filled.
+Users can update the transaction details.
+Updated data is saved successfully.
+🗑️ Delete Transaction
+
+Users can remove transactions they no longer need.
+
+Delete confirmation is displayed.
+Transaction is permanently removed after confirmation.
+🔎 Filter Transactions
+
+Users can filter their transaction history based on:
+
+Transaction type
+Category
+Date range
+🔍 Search Transactions
+
+Users can quickly find transactions by searching their title.
+
+Search by transaction title.
+Display matching transactions.
+🚪 Logout
+
+Users can securely end their session.
+
+Ends the authenticated session.
+Redirects the user to the login page.
+🛠️ Tech Stack
+Frontend
+Vue 3
+TypeScript
+Vite
+Tailwind CSS
+Nuxt UI Components
+Axios
+Vue Router
+HTML5
+CSS
+Backend
+Laravel
+PHP
+RESTful APIs
+Eloquent ORM
+Laravel Request Validation
+Database
+MySQL
+🏗️ Application Architecture
+                         LedgerFinance
+                              │
+             ┌────────────────┴────────────────┐
+             │                                 │
+        Vue Frontend                     Laravel Backend
+             │                                 │
+     ┌───────┴────────┐                ┌───────┴────────┐
+     │                │                │                │
+   Views         Components        Controllers      Services
+     │                │                │                │
+     └────────┬───────┘                └────────┬───────┘
+              │                                 │
+           Axios ───────── REST API ────────────┘
+                                                │
+                                                │
+                                             Eloquent
+                                                │
+                                                ▼
+                                             MySQL
+📁 Project Structure
+LedgerFinance/
+│
+├── database/                       # Database migrations, seeders and factories
+│
+├── public/                         # Public assets
+│
+├── resources/
+│   ├── css/                        # Tailwind CSS and application styles
+│   │
+│   └── js/                         # Vue frontend application
+│       ├── components/             # Reusable Vue components
+│       ├── composables/            # Reusable Vue composables
+│       ├── configs/                # Frontend configuration
+│       ├── enums/                  # Frontend enums
+│       ├── interfaces/             # TypeScript interfaces
+│       ├── models/                 # Frontend models
+│       ├── router/                 # Vue Router configuration
+│       ├── services/               # API service layer
+│       ├── store/                  # Application state management
+│       ├── views/                  # Application pages/views
+│       ├── app.ts                  # Vue application entry point
+│       └── vite-env.d.ts           # Vite TypeScript definitions
+│
+├── routes/                         # Laravel API routes
+│
+├── src/                            # Laravel backend application
+│   ├── Contracts/
+│   │   └── Services/               # Service contracts/interfaces
+│   │
+│   ├── Http/
+│   │   ├── Controllers/            # API controllers
+│   │   ├── Requests/               # Request validation
+│   │   └── Resources/              # API resources
+│   │
+│   ├── Models/                     # Eloquent models
+│   ├── Providers/                  # Laravel service providers
+│   └── Services/                   # Business logic and services
+│
+├── storage/                        # Laravel storage and logs
+│
+├── tests/                          # Automated tests
+│
+├── vendor/                         # PHP dependencies
+│
+├── .env.example                    # Environment configuration example
+├── .gitignore
+├── artisan                         # Laravel Artisan CLI
+├── composer.json                   # PHP dependencies
+├── package.json                    # Node.js dependencies
+└── README.md
+🚀 Getting Started
+Prerequisites
+
+Make sure the following are installed:
+
+PHP 8.x
+Composer
+Node.js
+npm
+MySQL
+Git
+📥 Installation
+1. Clone the Repository
+git clone git@github-personal:KoushikReddyVummalareddy/LedgerFinance.git
+cd LedgerFinance
+2. Install PHP Dependencies
+composer install
+3. Install Frontend Dependencies
+npm install
+4. Create Environment File
+cp .env.example .env
+5. Generate Laravel Application Key
+php artisan key:generate
+🗄️ Database Configuration
+
+Create a MySQL database for the application.
+
+For example:
+
+ledger_finance
+
+Configure your .env file:
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=ledger_finance
+DB_USERNAME=root
+DB_PASSWORD=
+
+Update the database credentials according to your local MySQL configuration.
+
+Run Database Migrations
+php artisan migrate
+
+If seeders are available and you want to populate sample data:
+
+php artisan db:seed
+
+Or:
+
+php artisan migrate --seed
+⚙️ Frontend Configuration
+
+Configure the frontend API URL in your environment file.
+
+For example:
+
+VITE_API_BASE_URL=http://127.0.0.1:8000
+
+Make sure the URL matches the Laravel backend URL used in your local environment.
+
+▶️ Running the Application
+
+The frontend and backend should be started separately during development.
+
+Start Laravel Backend
+php artisan serve
+
+The backend will typically be available at:
+
+http://127.0.0.1:8000
+Start Vue Frontend
+npm run dev
+
+Vite will display the frontend URL in the terminal, typically:
+
+http://localhost:5173
+🔌 API Overview
+
+The Laravel backend exposes RESTful APIs for authentication, dashboard data, and transaction management.
+
+Feature	Method	Purpose
+Register	POST	Create a new user
+Login	POST	Authenticate user
+Logout	POST	End user session
+Dashboard	GET	Retrieve financial summary
+Transactions	GET	Retrieve transactions
+Add Transaction	POST	Create a transaction
+View Transaction	GET	Retrieve a transaction
+Edit Transaction	PUT/PATCH	Update a transaction
+Delete Transaction	DELETE	Delete a transaction
+Filter Transactions	GET	Filter transactions
+Search Transactions	GET	Search transactions by title
+
+The exact API paths depend on the route definitions in the Laravel application.
+
+💵 Transaction Types
+
+LedgerFinance supports two transaction types.
+
+Income
+
+Represents money received by the user.
+
+Examples:
+
+Salary
+Freelance income
+Bonus
+Other income
+Expense
+
+Represents money spent by the user.
+
+Examples:
+
+Food
+Shopping
+Transportation
+Bills
+Entertainment
+🔐 Security
+
+The application includes several security and validation measures:
+
+Secure password hashing.
+Unique email validation.
+Authentication-protected routes.
+User-specific financial data.
+Backend request validation.
+Authenticated logout.
+Protected transaction operations.
+
+Users can only access and manage their own financial records.
+
+👤 User Stories
+
+The following user stories have been implemented:
+
+User Story	Status
+User Registration	✅ Completed
+Login	✅ Completed
+Dashboard	✅ Completed
+Add Transaction	✅ Completed
+View Transactions	✅ Completed
+Edit Transaction	✅ Completed
+Delete Transaction	✅ Completed
+Filter Transactions	✅ Completed
+Search Transactions	✅ Completed
+Logout	✅ Completed
+📌 Acceptance Criteria
+User Registration
+ Register with name, email, and password.
+ Email must be unique.
+ Password is securely hashed.
+Login
+ Valid credentials allow login.
+ Invalid credentials display an error.
+Dashboard
+ Display total income.
+ Display total expenses.
+ Display current balance.
+ Display recent transactions.
+Add Transaction
+ Enter title.
+ Enter amount.
+ Select transaction type.
+ Select category.
+ Select date.
+ Save transaction successfully.
+View Transactions
+ List all transactions.
+ Display title, amount, category, type, and date.
+ Display latest transactions first.
+Edit Transaction
+ Pre-fill existing transaction data.
+ Save updated transaction.
+Delete Transaction
+ Display delete confirmation.
+ Permanently delete the transaction.
+Filter Transactions
+ Filter by transaction type.
+ Filter by category.
+ Filter by date range.
+Search Transactions
+ Search transactions by title.
+ Display matching results.
+Logout
+ End the user session.
+ Redirect to the login page.
+🧪 Testing
+
+Run the Laravel test suite with:
+
+php artisan test
+
+You can also run a specific test:
+
+php artisan test --filter=TestName
+🔄 Development Workflow
+
+A typical development workflow for the project is:
+
+User Action
+    ↓
+Vue Component
+    ↓
+Composable / Service
+    ↓
+Axios API Request
+    ↓
+Laravel Route
+    ↓
+Controller
+    ↓
+Request Validation
+    ↓
+Service Layer
+    ↓
+Eloquent Model
+    ↓
+MySQL
+    ↓
+API Response
+    ↓
+Vue UI Update
+
+This separation keeps the frontend presentation logic, API communication, backend business logic, and database operations organized.
+
+📈 Future Improvements
+
+Potential future enhancements include:
+
+Monthly and yearly financial reports.
+Expense and income charts.
+Budget management.
+Export transactions to CSV/Excel.
+Recurring transactions.
+Financial analytics.
+Notifications and reminders.
+Dark mode.
+Improved mobile responsiveness.
+Pagination for large transaction histories.
+📄 License
+
+This project was developed as a personal finance tracking application for learning, development, and demonstration purposes.
