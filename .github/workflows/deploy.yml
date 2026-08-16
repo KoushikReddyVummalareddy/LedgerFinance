@@ -49,3 +49,10 @@ jobs:
             storage/logs/**
             composer.json.backup
             composer.lock.backup
+            compose.yaml
+            README.md
+            package.json
+            package-lock.json
+            phpunit.xml
+            components.d.ts
+            auto-imports.d.ts
