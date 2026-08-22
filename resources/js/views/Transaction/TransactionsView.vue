@@ -74,11 +74,12 @@ onMounted(() => {
         <Sidebar />
 
         <!-- Content -->
-        <main class="flex-1 px-8 py-8">
-
+        <main
+            class="min-w-0 flex-1 px-4 pb-8 pt-20 sm:px-6 md:px-8 md:py-8"
+        >
             <!-- Header -->
             <div
-                class="mb-4 flex items-center justify-between"
+                class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
             >
                 <h1
                     class="font-serif text-2xl font-bold text-[#163653]"
@@ -89,7 +90,7 @@ onMounted(() => {
                 <NuxtButton
                     type="button"
                     size="lg"
-                    class="bg-[#d2a33a] px-5 text-sm font-medium text-[#1f2d42] hover:bg-[#c1922e]"
+                    class="w-full bg-[#d2a33a] px-5 text-sm font-medium text-[#1f2d42] hover:bg-[#c1922e] sm:w-auto"
                     @click="openAddTransaction"
                 >
                     <NuxtIcon
@@ -149,19 +150,20 @@ onMounted(() => {
                 <!-- Empty -->
                 <NuxtCard
                     v-if="!filteredTransactions.length"
-                    class="flex h-[72px] items-center justify-center rounded-xl border border-[#ddd7c8] bg-white shadow-none"
+                    class="flex min-h-[72px] items-center justify-center rounded-xl border border-[#ddd7c8] bg-white px-4 py-4 shadow-none"
                 >
                     <p
-                        class="text-xs text-[#8a939d]"
+                        class="text-center text-xs text-[#8a939d]"
                     >
-                        No transactions yet. Add your first one to start your ledger.
+                        No transactions yet. Add your first one to start
+                        your ledger.
                     </p>
                 </NuxtCard>
 
                 <!-- Transaction List -->
                 <NuxtCard
                     v-else
-                    class="rounded-xl border border-[#ddd7c8] bg-white shadow-none"
+                    class="overflow-hidden rounded-xl border border-[#ddd7c8] bg-white shadow-none"
                 >
                     <div
                         class="divide-y divide-[#eeeae0]"
@@ -169,12 +171,13 @@ onMounted(() => {
                         <div
                             v-for="transaction in filteredTransactions"
                             :key="transaction.id"
-                            class="px-4"
+                            class="px-3 sm:px-4"
                         >
                             <div
-                                class="flex items-center justify-between py-4"
+                                class="flex items-center justify-between gap-3 py-4"
                             >
-                                <div class="min-w-0">
+                                <!-- Transaction Info -->
+                                <div class="min-w-0 flex-1">
                                     <p
                                         class="truncate text-sm font-medium text-[#1d211b]"
                                     >
@@ -182,10 +185,10 @@ onMounted(() => {
                                     </p>
 
                                     <div
-                                        class="mt-1 flex items-center gap-2"
+                                        class="mt-1 flex min-w-0 items-center gap-2"
                                     >
                                         <span
-                                            class="text-xs text-[#8a939d]"
+                                            class="shrink-0 text-xs text-[#8a939d]"
                                         >
                                             {{
                                                 transaction.transactionDate
@@ -194,7 +197,7 @@ onMounted(() => {
 
                                         <span
                                             v-if="transaction.category"
-                                            class="text-xs text-[#8a939d]"
+                                            class="truncate text-xs text-[#8a939d]"
                                         >
                                             •
                                             {{
@@ -204,8 +207,9 @@ onMounted(() => {
                                     </div>
                                 </div>
 
+                                <!-- Amount -->
                                 <p
-                                    class="ml-4 shrink-0 text-sm font-semibold"
+                                    class="shrink-0 whitespace-nowrap text-sm font-semibold"
                                     :class="
                                         transaction.type === 'income'
                                             ? 'text-[#277c80]'

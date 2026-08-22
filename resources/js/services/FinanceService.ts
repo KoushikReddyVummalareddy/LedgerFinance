@@ -51,7 +51,12 @@ export const CategoryService = {
     getCategories: () =>
         axios.get<{
             data: CategoryInterface[];
-        }>('/api/categories'),
+        }>('/api/categories', {
+            params: {
+                page: 1,
+                size: 100,
+            },
+        }),
 
     createCategory: (payload: {
         name: string;

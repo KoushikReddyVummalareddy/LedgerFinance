@@ -33,6 +33,15 @@ const filteredCategories = computed(() => {
     );
 });
 
+const categoryItems = computed(() => {
+    return filteredCategories.value.map(
+        (category) => ({
+            label: category.name,
+            value: category.id,
+        }),
+    );
+});
+
 async function loadCategories() {
     loading.value = true;
     error.value = '';
@@ -84,18 +93,18 @@ onMounted(() => {
 <template>
     <!-- Overlay -->
     <div
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+        class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/40 px-3 py-4 sm:items-center sm:px-4 sm:py-6"
     >
         <!-- Modal -->
         <div
-            class="w-full max-w-[430px] rounded-xl bg-white p-5 shadow-xl"
+            class="my-auto w-full max-w-[430px] rounded-xl bg-white p-4 shadow-xl sm:p-5"
         >
             <!-- Header -->
             <div
                 class="mb-4 flex items-center justify-between"
             >
                 <h2
-                    class="font-serif text-xl font-bold text-[#163653]"
+                    class="font-serif text-lg font-bold text-[#163653] sm:text-xl"
                 >
                     Add transaction
                 </h2>
@@ -103,7 +112,7 @@ onMounted(() => {
                 <button
                     type="button"
                     aria-label="Close"
-                    class="text-[#8a939d] hover:text-[#163653]"
+                    class="flex h-8 w-8 items-center justify-center rounded-lg text-[#8a939d] hover:bg-[#f5f3ed] hover:text-[#163653]"
                     @click="emit('close')"
                 >
                     <NuxtIcon
@@ -117,6 +126,7 @@ onMounted(() => {
             <div
                 class="mb-4 grid grid-cols-2 gap-2"
             >
+                <!-- Expense -->
                 <button
                     type="button"
                     class="h-9 rounded-lg border text-sm font-medium"
@@ -130,13 +140,14 @@ onMounted(() => {
                     ↘ &nbsp; Expense
                 </button>
 
+                <!-- Income -->
                 <button
                     type="button"
                     class="h-9 rounded-lg border text-sm font-medium"
                     :class="
                         type === 'income'
-                            ? 'border-[#277c80] bg-[#e7f2ed] text-[#277c80]'
-                            : 'border-[#d7d2c4] bg-white text-[#53677a]'
+                              ? 'border-[#0f5c45] bg-[#dceee7] text-[#0f5c45]'
+                              : 'border-[#d7d2c4] bg-white text-[#53677a]'
                     "
                     @click="selectType('income')"
                 >
@@ -157,17 +168,17 @@ onMounted(() => {
                     id="transaction-title"
                     v-model="title"
                     type="text"
-                    placeholder="e.g. Grocery run"
-                    class="h-9 w-full rounded-lg border-[#d7d2c4] bg-white text-sm"
+                    placeholder="Enter Transaction Title"
+                    class="w-full"
                 />
             </div>
 
             <!-- Amount + Date -->
             <div
-                class="mb-3 grid grid-cols-2 gap-3"
+                class="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2"
             >
                 <!-- Amount -->
-                <div>
+                <div class="min-w-0">
                     <label
                         for="transaction-amount"
                         class="mb-1 block text-[11px] font-medium uppercase tracking-wide text-[#53677a]"
@@ -182,12 +193,12 @@ onMounted(() => {
                         min="0"
                         step="0.01"
                         placeholder="0.00"
-                        class="h-9 w-full rounded-lg border-[#d7d2c4] bg-white text-sm"
+                        class="w-full"
                     />
                 </div>
 
                 <!-- Date -->
-                <div>
+                <div class="min-w-0">
                     <label
                         for="transaction-date"
                         class="mb-1 block text-[11px] font-medium uppercase tracking-wide text-[#53677a]"
@@ -199,7 +210,7 @@ onMounted(() => {
                         id="transaction-date"
                         v-model="transactionDate"
                         type="date"
-                        class="h-9 w-full rounded-lg border-[#d7d2c4] bg-white text-sm"
+                        class="w-full"
                     />
                 </div>
             </div>
@@ -213,27 +224,46 @@ onMounted(() => {
                     Category
                 </label>
 
-                <select
+                <NuxtSelect
                     id="transaction-category"
                     v-model="categoryId"
-                    class="h-9 w-full rounded-lg border border-[#d7d2c4] bg-white px-3 text-sm text-[#1f2d42] outline-none focus:border-[#53677a]"
-                >
-                    <option
-                        :value="null"
-                        disabled
-                    >
-                        Choose a category
-                    </option>
-
-                    <option
-                        v-for="category in filteredCategories"
-                        :key="category.id"
-                        :value="category.id"
-                    >
-                        {{ category.name }}
-                    </option>
-                </select>
+                    :items="categoryItems"
+                    value-key="value"
+                    label-key="label"
+                    placeholder="Choose a category"
+                    :disabled="loading"
+                    class="w-full"
+                    :ui="{
+                        content:
+                            'z-[60] max-h-60 overflow-y-auto',
+                    }"
+                />
             </div>
+
+            <!-- Loading -->
+            <p
+                v-if="loading"
+                class="mb-3 text-xs text-[#8a939d]"
+            >
+                Loading categories...
+            </p>
+
+            <!-- No Categories -->
+            <p
+                v-else-if="
+                    !filteredCategories.length &&
+                    !error
+                "
+                class="mb-3 text-xs text-[#8a939d]"
+            >
+                No
+                {{
+                    type === 'expense'
+                        ? 'expense'
+                        : 'income'
+                }}
+                categories available.
+            </p>
 
             <!-- Error -->
             <p
@@ -245,13 +275,13 @@ onMounted(() => {
 
             <!-- Actions -->
             <div
-                class="flex justify-end gap-2"
+                class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end"
             >
                 <NuxtButton
                     type="button"
                     variant="outline"
                     color="neutral"
-                    class="border-[#d7d2c4] bg-white px-4 text-sm text-[#1f2d42]"
+                    class="w-full border-[#d7d2c4] bg-white px-4 text-sm text-[#1f2d42] sm:w-auto"
                     @click="emit('close')"
                 >
                     Cancel
@@ -259,7 +289,7 @@ onMounted(() => {
 
                 <NuxtButton
                     type="button"
-                    class="bg-[#d2a33a] px-4 text-sm font-medium text-[#1f2d42] hover:bg-[#c1922e]"
+                    class="w-full bg-[#d2a33a] px-4 text-sm font-medium text-[#1f2d42] hover:bg-[#c1922e] sm:w-auto"
                     :disabled="
                         loading ||
                         !title.trim() ||

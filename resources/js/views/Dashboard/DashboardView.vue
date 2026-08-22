@@ -47,8 +47,8 @@ const saveTransaction = async (transaction: {
         closeAddTransaction();
 
         await getDashboard();
-    } catch (err) {
-        console.error(err);
+    } catch {
+        // Transaction creation failed.
     }
 };
 
@@ -73,8 +73,9 @@ onMounted(() => {
         <Sidebar />
 
         <!-- Content -->
-        <main class="flex-1 px-8 py-8">
-
+        <main
+            class="min-w-0 flex-1 px-4 pb-8 pt-20 sm:px-6 md:px-8 md:py-8"
+        >
             <!-- Loading -->
             <div
                 v-if="loading"
@@ -99,9 +100,9 @@ onMounted(() => {
 
                 <!-- Balance -->
                 <div
-                    class="flex items-end justify-between"
+                    class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
                 >
-                    <div>
+                    <div class="min-w-0">
                         <p
                             class="text-xs font-medium uppercase tracking-wide text-[#7d8b9b]"
                         >
@@ -109,21 +110,21 @@ onMounted(() => {
                         </p>
 
                         <h1
-                            class="mt-1 text-4xl font-bold text-[#163653]"
+                            class="mt-1 break-words text-3xl font-bold text-[#163653] sm:text-4xl"
                         >
                             $
                             {{ formatAmount(dashboard.currentBalance) }}
                         </h1>
 
                         <div
-                            class="mt-2 h-0.5 w-44 bg-[#d2a33a]"
+                            class="mt-2 h-0.5 w-32 bg-[#d2a33a] sm:w-44"
                         />
                     </div>
 
                     <NuxtButton
                         type="button"
                         size="lg"
-                        class="bg-[#d2a33a] px-5 text-sm font-medium text-[#1f2d42] hover:bg-[#c1922e]"
+                        class="w-full bg-[#d2a33a] px-5 text-sm font-medium text-[#1f2d42] hover:bg-[#c1922e] sm:w-auto"
                         @click="openAddTransaction"
                     >
                         <NuxtIcon
@@ -137,7 +138,7 @@ onMounted(() => {
 
                 <!-- Summary -->
                 <div
-                    class="mt-5 grid grid-cols-2 gap-4"
+                    class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2"
                 >
                     <!-- Income -->
                     <NuxtCard
@@ -147,7 +148,7 @@ onMounted(() => {
                             class="flex items-center gap-2"
                         >
                             <div
-                                class="flex h-6 w-6 items-center justify-center rounded-md bg-[#e7f2ed]"
+                                class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#e7f2ed]"
                             >
                                 <NuxtIcon
                                     name="lucide:arrow-up-right"
@@ -178,7 +179,7 @@ onMounted(() => {
                             class="flex items-center gap-2"
                         >
                             <div
-                                class="flex h-6 w-6 items-center justify-center rounded-md bg-[#fce9e5]"
+                                class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#fce9e5]"
                             >
                                 <NuxtIcon
                                     name="lucide:arrow-down-right"
@@ -211,19 +212,20 @@ onMounted(() => {
                     </p>
 
                     <NuxtCard
-                        class="rounded-xl border border-[#ddd7c8] bg-white shadow-none"
+                        class="overflow-hidden rounded-xl border border-[#ddd7c8] bg-white shadow-none"
                     >
                         <!-- Empty -->
                         <div
                             v-if="
                                 !dashboard.recentTransactions?.length
                             "
-                            class="flex h-[72px] items-center justify-center"
+                            class="flex min-h-[72px] items-center justify-center px-4 py-4"
                         >
                             <p
-                                class="text-xs text-[#8a939d]"
+                                class="text-center text-xs text-[#8a939d]"
                             >
-                                No transactions yet. Add your first one to start your ledger.
+                                No transactions yet. Add your first one
+                                to start your ledger.
                             </p>
                         </div>
 
@@ -235,15 +237,16 @@ onMounted(() => {
                             <div
                                 v-for="transaction in dashboard.recentTransactions"
                                 :key="transaction.id"
-                                class="cursor-pointer py-3 transition hover:bg-[#f8f6ef]"
+                                class="cursor-pointer px-3 py-3 transition hover:bg-[#f8f6ef] sm:px-4"
                                 @click="goToTransactions"
                             >
                                 <div
-                                    class="flex items-center justify-between"
+                                    class="flex items-center justify-between gap-3"
                                 >
-                                    <div>
+                                    <!-- Transaction Info -->
+                                    <div class="min-w-0 flex-1">
                                         <p
-                                            class="text-sm font-medium text-[#1d211b]"
+                                            class="truncate text-sm font-medium text-[#1d211b]"
                                         >
                                             {{ transaction.title }}
                                         </p>
@@ -251,12 +254,15 @@ onMounted(() => {
                                         <p
                                             class="mt-1 text-xs text-[#8a939d]"
                                         >
-                                            {{ transaction.transactionDate }}
+                                            {{
+                                                transaction.transactionDate
+                                            }}
                                         </p>
                                     </div>
 
+                                    <!-- Amount -->
                                     <p
-                                        class="text-sm font-semibold"
+                                        class="shrink-0 whitespace-nowrap text-sm font-semibold"
                                         :class="
                                             transaction.type === 'income'
                                                 ? 'text-[#277c80]'
@@ -268,7 +274,9 @@ onMounted(() => {
                                                 ? '+'
                                                 : '-'
                                         }}${{
-                                            formatAmount(transaction.amount)
+                                            formatAmount(
+                                                transaction.amount,
+                                            )
                                         }}
                                     </p>
                                 </div>

@@ -1,65 +1,102 @@
-LedgerFinance
+# LedgerFinance
 
-LedgerFinance is a simple personal finance management application built with Vue 3 and Laravel. It helps users manage their income and expenses, view their financial summary, and track transaction history.
+LedgerFinance is a personal finance management application built with Vue 3 and Laravel. It allows users to manage income and expenses, track transactions, and view their financial summary.
 
-Features
+## Production
 
-- User registration and login
-- Secure authentication
-- Financial dashboard
-- Add, edit, and delete transactions
-- Track income and expenses
-- View current balance
-- Search transactions
-- Filter by type, category, and date
-- View recent transactions
+[LedgerFinance](https://ledgerfinance.wuaze.com)
 
-Tech Stack
+## Tech Stack
 
-- Frontend: Vue 3, TypeScript, Tailwind CSS
-- Backend: Laravel, PHP
-- Database: MySQL
-- API: REST API
-- HTTP Client: Axios
-- Build Tool: Vite
+- Vue 3
+- TypeScript
+- Tailwind CSS
+- Laravel
+- PHP
+- MySQL
+- Axios
+- Vite
 
-Installation
+## Getting Started
+
+### Prerequisites
+
+- PHP 8.2+
+- Composer
+- Node.js 18+
+- npm
+- MySQL
+
+### Installation
 
 Clone the repository:
 
+```bash
 git clone <repository-url>
 cd LedgerFinance
+```
 
-Install Laravel dependencies:
+Install dependencies:
 
+```bash
 composer install
-
-Install frontend dependencies:
-
 npm install
+```
 
 Create the environment file:
 
+```bash
 cp .env.example .env
+```
 
 Generate the application key:
 
+```bash
 php artisan key:generate
+```
 
-Configure your MySQL database in ".env", then run:
+Configure the database in `.env`, then run:
 
-php artisan migrate
+```bash
+php artisan migrate --seed
+```
 
-Run the Application
+## Development
 
-Start Laravel:
+Start the Laravel backend:
 
+```bash
 php artisan serve
+```
 
-Start Vue:
+Start the frontend in a separate terminal:
 
+```bash
 npm run dev
+```
 
-Balance Calculation
+## Features
 
-Current Balance = Total Income - Total Expenses
+- User authentication
+- Financial dashboard
+- Income and expense management
+- Transaction management
+- Category management
+- Transaction search and filtering
+- Current balance and financial summary
+- Responsive interface
+
+## Project Structure
+
+```text
+LedgerFinance/
+├── app/            # Laravel application
+├── database/       # Migrations and seeders
+├── routes/         # API routes
+├── resources/      # Frontend resources
+├── public/         # Public assets
+├── src/            # Frontend source code
+├── composer.json   # PHP dependencies
+├── package.json    # Frontend dependencies
+└── README.md       # Project documentation
+```

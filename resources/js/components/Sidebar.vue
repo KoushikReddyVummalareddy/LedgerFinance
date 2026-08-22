@@ -8,7 +8,7 @@ const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 
-const isCollapsed = ref(false);
+const isMobileOpen = ref(false);
 
 const user = computed(() => authStore.user);
 
@@ -16,20 +16,28 @@ const userInitial = computed(() => {
     return user.value?.name?.charAt(0).toUpperCase() ?? 'U';
 });
 
-const toggleSidebar = () => {
-    isCollapsed.value = !isCollapsed.value;
+const toggleMobileSidebar = () => {
+    isMobileOpen.value = !isMobileOpen.value;
+};
+
+const closeMobileSidebar = () => {
+    isMobileOpen.value = false;
 };
 
 const goToDashboard = () => {
     router.push({
         name: VueRouteEnum.COMMONS.DASHBOARD,
     });
+
+    closeMobileSidebar();
 };
 
 const goToTransactions = () => {
     router.push({
         name: VueRouteEnum.COMMONS.TRANSACTIONS,
     });
+
+    closeMobileSidebar();
 };
 
 const isDashboard = () => {
@@ -42,28 +50,80 @@ const isTransactions = () => {
 </script>
 
 <template>
+    <!-- Mobile Header -->
+    <header
+        class="fixed left-0 right-0 top-0 z-30 flex h-16 items-center bg-[#1f2d42] px-4 text-white md:hidden"
+    >
+        <NuxtButton
+            type="button"
+            variant="ghost"
+            color="neutral"
+            class="!px-2 text-white hover:bg-[#344156]"
+            aria-label="Open sidebar"
+            @click="toggleMobileSidebar"
+        >
+            <NuxtIcon
+                name="lucide:menu"
+                class="h-5 w-5"
+            />
+        </NuxtButton>
+
+        <div class="ml-3 flex items-center gap-2">
+            <div
+                class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#d2a33a]"
+            >
+                <NuxtIcon
+                    name="lucide:wallet"
+                    class="h-4 w-4 text-[#1f2d42]"
+                />
+            </div>
+
+            <span class="text-lg font-bold">
+                Ledger
+            </span>
+        </div>
+    </header>
+
+    <!-- Mobile Backdrop -->
+    <div
+        v-if="isMobileOpen"
+        class="fixed inset-0 z-40 bg-black/50 md:hidden"
+        @click="closeMobileSidebar"
+    />
+
+    <!-- Sidebar -->
     <aside
-        class="relative flex min-h-screen flex-col bg-[#1f2d42] text-white transition-all duration-300"
-        :class="isCollapsed ? 'w-16' : 'w-48'"
+        class="
+            fixed
+            left-0
+            top-0
+            z-50
+            flex
+            min-h-screen
+            w-64
+            flex-col
+            bg-[#1f2d42]
+            text-white
+            transition-transform
+            duration-300
+            ease-in-out
+            md:relative
+            md:z-auto
+            md:w-48
+            md:translate-x-0
+        "
+        :class="
+            isMobileOpen
+                ? 'translate-x-0'
+                : '-translate-x-full'
+        "
     >
         <!-- Header -->
         <div
-            class="flex h-16 items-center px-4"
-            :class="
-                isCollapsed
-                    ? 'justify-center'
-                    : 'justify-start'
-            "
+            class="flex h-16 items-center justify-between px-4"
         >
             <!-- Logo -->
-            <div
-                class="flex items-center gap-3"
-                :class="
-                    isCollapsed
-                        ? 'justify-center'
-                        : ''
-                "
-            >
+            <div class="flex items-center gap-3">
                 <div
                     class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#d2a33a]"
                 >
@@ -73,56 +133,48 @@ const isTransactions = () => {
                     />
                 </div>
 
-                <span
-                    v-if="!isCollapsed"
-                    class="text-lg font-bold"
-                >
+                <span class="text-lg font-bold">
                     Ledger
                 </span>
             </div>
+
+            <!-- Mobile Close -->
+            <NuxtButton
+                type="button"
+                variant="ghost"
+                color="neutral"
+                class="!px-2 text-white hover:bg-[#344156] md:hidden"
+                aria-label="Close sidebar"
+                @click="closeMobileSidebar"
+            >
+                <NuxtIcon
+                    name="lucide:x"
+                    class="h-5 w-5"
+                />
+            </NuxtButton>
         </div>
 
         <!-- Navigation -->
-        <nav
-            class="mt-4"
-            :class="
-                isCollapsed
-                    ? 'px-2'
-                    : 'px-3'
-            "
-        >
+        <nav class="mt-4 px-3">
             <!-- Dashboard -->
             <NuxtButton
                 type="button"
                 variant="ghost"
                 color="neutral"
                 :class="[
-                    'w-full',
-                    isCollapsed
-                        ? 'justify-center px-0'
-                        : 'justify-start',
+                    'w-full justify-start',
                     isDashboard()
                         ? 'bg-[#344156] text-[#d2a33a]'
                         : 'text-white',
                 ]"
-                :aria-label="
-                    isCollapsed
-                        ? 'Dashboard'
-                        : undefined
-                "
                 @click="goToDashboard"
             >
                 <NuxtIcon
                     name="lucide:layout-dashboard"
-                    class="h-4 w-4 shrink-0"
-                    :class="
-                        isCollapsed
-                            ? ''
-                            : 'mr-2'
-                    "
+                    class="mr-2 h-4 w-4 shrink-0"
                 />
 
-                <span v-if="!isCollapsed">
+                <span>
                     Dashboard
                 </span>
             </NuxtButton>
@@ -133,127 +185,49 @@ const isTransactions = () => {
                 variant="ghost"
                 color="neutral"
                 :class="[
-                    'mt-1 w-full',
-                    isCollapsed
-                        ? 'justify-center px-0'
-                        : 'justify-start',
+                    'mt-1 w-full justify-start',
                     isTransactions()
                         ? 'bg-[#344156] text-[#d2a33a]'
                         : 'text-white',
                 ]"
-                :aria-label="
-                    isCollapsed
-                        ? 'Transactions'
-                        : undefined
-                "
                 @click="goToTransactions"
             >
                 <NuxtIcon
                     name="lucide:list"
-                    class="h-4 w-4 shrink-0"
-                    :class="
-                        isCollapsed
-                            ? ''
-                            : 'mr-2'
-                    "
+                    class="mr-2 h-4 w-4 shrink-0"
                 />
 
-                <span v-if="!isCollapsed">
+                <span>
                     Transactions
                 </span>
             </NuxtButton>
         </nav>
 
-        <!-- Bottom Section -->
-        <div class="mt-auto">
-
-            <!-- Collapse / Expand -->
-            <div
-                class="border-t border-[#344156]"
-                :class="
-                    isCollapsed
-                        ? 'px-2 py-3'
-                        : 'px-3 py-3'
-                "
-            >
-                <NuxtButton
-                    type="button"
-                    variant="ghost"
-                    color="neutral"
-                    :class="[
-                        'w-full text-[#9ba6b5] hover:bg-[#344156] hover:text-white',
-                        isCollapsed
-                            ? 'justify-center px-0'
-                            : 'justify-start',
-                    ]"
-                    :aria-label="
-                        isCollapsed
-                            ? 'Expand sidebar'
-                            : 'Collapse sidebar'
-                    "
-                    @click="toggleSidebar"
-                >
-                    <NuxtIcon
-                        :name="
-                            isCollapsed
-                                ? 'lucide:chevron-right'
-                                : 'lucide:chevron-left'
-                        "
-                        class="h-4 w-4 shrink-0"
-                        :class="
-                            isCollapsed
-                                ? ''
-                                : 'mr-2'
-                        "
-                    />
-
-                    <span v-if="!isCollapsed">
-                        Collapse
-                    </span>
-                </NuxtButton>
-            </div>
-
-            <!-- User -->
-            <div
-                class="border-t border-[#344156]"
-                :class="
-                    isCollapsed
-                        ? 'px-2 py-4'
-                        : 'px-4 py-4'
-                "
-            >
+        <!-- User -->
+        <div
+            class="mt-auto border-t border-[#344156] px-4 py-4"
+        >
+            <div class="flex items-center gap-3">
+                <!-- User Initial -->
                 <div
-                    class="flex items-center"
-                    :class="
-                        isCollapsed
-                            ? 'justify-center'
-                            : 'gap-3'
-                    "
+                    class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#344156] text-xs"
                 >
-                    <!-- User Initial -->
-                    <div
-                        class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#344156] text-xs"
-                    >
-                        {{ userInitial }}
-                    </div>
+                    {{ userInitial }}
+                </div>
 
-                    <!-- User Details -->
-                    <div
-                        v-if="!isCollapsed"
-                        class="min-w-0"
+                <!-- User Details -->
+                <div class="min-w-0">
+                    <p
+                        class="truncate text-xs font-medium text-white"
                     >
-                        <p
-                            class="truncate text-xs font-medium text-white"
-                        >
-                            {{ user?.name ?? 'User' }}
-                        </p>
+                        {{ user?.name ?? 'User' }}
+                    </p>
 
-                        <p
-                            class="truncate text-[10px] text-[#9ba6b5]"
-                        >
-                            {{ user?.email ?? '' }}
-                        </p>
-                    </div>
+                    <p
+                        class="truncate text-[10px] text-[#9ba6b5]"
+                    >
+                        {{ user?.email ?? '' }}
+                    </p>
                 </div>
             </div>
         </div>
