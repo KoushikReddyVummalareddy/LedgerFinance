@@ -112,7 +112,7 @@ onMounted(() => {
                         <h1
                             class="mt-1 break-words text-3xl font-bold text-[#163653] sm:text-4xl"
                         >
-                            $
+                            ₹
                             {{ formatAmount(dashboard.currentBalance) }}
                         </h1>
 
@@ -166,7 +166,7 @@ onMounted(() => {
                         <p
                             class="mt-3 text-xl font-semibold text-[#277c80]"
                         >
-                            $
+                            ₹
                             {{ formatAmount(dashboard.totalIncome) }}
                         </p>
                     </NuxtCard>
@@ -197,7 +197,7 @@ onMounted(() => {
                         <p
                             class="mt-3 text-xl font-semibold text-[#d9553d]"
                         >
-                            $
+                            ₹
                             {{ formatAmount(dashboard.totalExpense) }}
                         </p>
                     </NuxtCard>
@@ -273,7 +273,7 @@ onMounted(() => {
                                             transaction.type === 'income'
                                                 ? '+'
                                                 : '-'
-                                        }}${{
+                                        }}₹{{
                                             formatAmount(
                                                 transaction.amount,
                                             )

@@ -92,7 +92,7 @@ export const CategoryService = {
 export const TransactionService = {
     getTransactions: (params?: {
         page?: number;
-        pageSize?: number;
+        size?: number;
         type?: 'income' | 'expense';
         categoryId?: number;
         search?: string;

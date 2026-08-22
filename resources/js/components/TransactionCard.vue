@@ -1,7 +1,21 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import {
+    computed,
+    onMounted,
+    ref,
+    watch,
+} from 'vue';
+
 import { CategoryService } from '../services/FinanceService';
-import type { CategoryInterface } from '../interfaces/TransactionInterface';
+
+import type {
+    CategoryInterface,
+    TransactionInterface,
+} from '../interfaces/TransactionInterface';
+
+const props = defineProps<{
+    transaction?: TransactionInterface | null;
+}>();
 
 const emit = defineEmits<{
     close: [];
@@ -17,7 +31,7 @@ const emit = defineEmits<{
     ];
 }>();
 
-const type = ref<'expense' | 'income'>('expense');
+const type = ref<'income' | 'expense'>('expense');
 const title = ref('');
 const amount = ref<number | null>(null);
 const transactionDate = ref('');
@@ -27,20 +41,73 @@ const categories = ref<CategoryInterface[]>([]);
 const loading = ref(false);
 const error = ref('');
 
-const filteredCategories = computed(() => {
-    return categories.value.filter(
-        (category) => category.type === type.value,
-    );
-});
+const isEditMode = computed(
+    () => !!props.transaction,
+);
 
-const categoryItems = computed(() => {
-    return filteredCategories.value.map(
+const filteredCategories = computed(() =>
+    categories.value.filter(
+        (category) =>
+            category.type === type.value,
+    ),
+);
+
+const categoryItems = computed(() =>
+    filteredCategories.value.map(
         (category) => ({
             label: category.name,
             value: category.id,
         }),
-    );
-});
+    ),
+);
+
+const isFormValid = computed(
+    () =>
+        !!title.value.trim() &&
+        amount.value !== null &&
+        amount.value > 0 &&
+        !!transactionDate.value &&
+        !!categoryId.value,
+);
+
+function resetForm() {
+    type.value = 'expense';
+    title.value = '';
+    amount.value = null;
+    transactionDate.value = '';
+    categoryId.value = null;
+}
+
+function populateForm(
+    transaction: TransactionInterface,
+) {
+    type.value = transaction.type;
+    title.value = transaction.title;
+    amount.value = Number(transaction.amount);
+
+    transactionDate.value =
+        transaction.transactionDate?.substring(
+            0,
+            10,
+        ) ?? '';
+
+    categoryId.value =
+        transaction.category?.id ?? null;
+}
+
+function handleTransactionChange() {
+    if (props.transaction) {
+        populateForm(props.transaction);
+    } else {
+        resetForm();
+    }
+}
+
+watch(
+    () => props.transaction,
+    handleTransactionChange,
+    { immediate: true },
+);
 
 async function loadCategories() {
     loading.value = true;
@@ -50,33 +117,40 @@ async function loadCategories() {
         const response =
             await CategoryService.getCategories();
 
-        categories.value = response.data.data;
+        categories.value =
+            response.data.data;
+
+        if (props.transaction) {
+            categoryId.value =
+                props.transaction.category?.id ??
+                null;
+        }
     } catch {
-        error.value = 'Unable to load categories.';
+        error.value =
+            'Unable to load categories.';
     } finally {
         loading.value = false;
     }
 }
 
 function selectType(
-    selectedType: 'expense' | 'income',
+    selectedType: 'income' | 'expense',
 ) {
+    if (type.value === selectedType) {
+        return;
+    }
+
     type.value = selectedType;
     categoryId.value = null;
 }
 
 function save() {
-    if (
-        !title.value.trim() ||
-        !amount.value ||
-        !transactionDate.value ||
-        !categoryId.value
-    ) {
+    if (!isFormValid.value) {
         return;
     }
 
     emit('save', {
-        categoryId: categoryId.value,
+        categoryId: categoryId.value!,
         title: title.value.trim(),
         amount: Number(amount.value),
         type: type.value,
@@ -85,9 +159,7 @@ function save() {
     });
 }
 
-onMounted(() => {
-    loadCategories();
-});
+onMounted(loadCategories);
 </script>
 
 <template>
@@ -97,7 +169,7 @@ onMounted(() => {
     >
         <!-- Modal -->
         <div
-            class="my-auto w-full max-w-[430px] rounded-xl bg-white p-4 shadow-xl sm:p-5"
+            class="my-auto w-full max-w-[470px] rounded-xl bg-white p-4 shadow-xl sm:p-5"
         >
             <!-- Header -->
             <div
@@ -106,7 +178,11 @@ onMounted(() => {
                 <h2
                     class="font-serif text-lg font-bold text-[#163653] sm:text-xl"
                 >
-                    Add transaction
+                    {{
+                        isEditMode
+                            ? 'Edit transaction'
+                            : 'Add transaction'
+                    }}
                 </h2>
 
                 <button
@@ -126,32 +202,39 @@ onMounted(() => {
             <div
                 class="mb-4 grid grid-cols-2 gap-2"
             >
-                <!-- Expense -->
                 <button
+                    v-for="item in [
+                        {
+                            value: 'expense',
+                            label: 'Expense',
+                            icon: '↘',
+                        },
+                        {
+                            value: 'income',
+                            label: 'Income',
+                            icon: '↗',
+                        },
+                    ]"
+                    :key="item.value"
                     type="button"
-                    class="h-9 rounded-lg border text-sm font-medium"
+                    class="h-10 rounded-lg border text-sm font-medium"
                     :class="
-                        type === 'expense'
-                            ? 'border-[#d9553d] bg-[#fce9e5] text-[#d9553d]'
+                        type === item.value
+                            ? item.value === 'expense'
+                                ? 'border-[#d9553d] bg-[#fce9e5] text-[#d9553d]'
+                                : 'border-[#0f5c45] bg-[#dceee7] text-[#0f5c45]'
                             : 'border-[#d7d2c4] bg-white text-[#53677a]'
                     "
-                    @click="selectType('expense')"
-                >
-                    ↘ &nbsp; Expense
-                </button>
-
-                <!-- Income -->
-                <button
-                    type="button"
-                    class="h-9 rounded-lg border text-sm font-medium"
-                    :class="
-                        type === 'income'
-                              ? 'border-[#0f5c45] bg-[#dceee7] text-[#0f5c45]'
-                              : 'border-[#d7d2c4] bg-white text-[#53677a]'
+                    @click="
+                        selectType(
+                            item.value as
+                                | 'income'
+                                | 'expense',
+                        )
                     "
-                    @click="selectType('income')"
                 >
-                    ↗ &nbsp; Income
+                    {{ item.icon }} &nbsp;
+                    {{ item.label }}
                 </button>
             </div>
 
@@ -173,12 +256,11 @@ onMounted(() => {
                 />
             </div>
 
-            <!-- Amount + Date -->
+            <!-- Amount and Date -->
             <div
                 class="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2"
             >
-                <!-- Amount -->
-                <div class="min-w-0">
+                <div>
                     <label
                         for="transaction-amount"
                         class="mb-1 block text-[11px] font-medium uppercase tracking-wide text-[#53677a]"
@@ -188,7 +270,7 @@ onMounted(() => {
 
                     <NuxtInput
                         id="transaction-amount"
-                        v-model="amount"
+                        v-model.number="amount"
                         type="number"
                         min="0"
                         step="0.01"
@@ -197,8 +279,7 @@ onMounted(() => {
                     />
                 </div>
 
-                <!-- Date -->
-                <div class="min-w-0">
+                <div>
                     <label
                         for="transaction-date"
                         class="mb-1 block text-[11px] font-medium uppercase tracking-wide text-[#53677a]"
@@ -248,7 +329,7 @@ onMounted(() => {
                 Loading categories...
             </p>
 
-            <!-- No Categories -->
+            <!-- Empty Categories -->
             <p
                 v-else-if="
                     !filteredCategories.length &&
@@ -256,13 +337,7 @@ onMounted(() => {
                 "
                 class="mb-3 text-xs text-[#8a939d]"
             >
-                No
-                {{
-                    type === 'expense'
-                        ? 'expense'
-                        : 'income'
-                }}
-                categories available.
+                No {{ type }} categories available.
             </p>
 
             <!-- Error -->
@@ -289,14 +364,8 @@ onMounted(() => {
 
                 <NuxtButton
                     type="button"
+                    :disabled="loading || !isFormValid"
                     class="w-full bg-[#d2a33a] px-4 text-sm font-medium text-[#1f2d42] hover:bg-[#c1922e] sm:w-auto"
-                    :disabled="
-                        loading ||
-                        !title.trim() ||
-                        !amount ||
-                        !transactionDate ||
-                        !categoryId
-                    "
                     @click="save"
                 >
                     <NuxtIcon
@@ -304,7 +373,11 @@ onMounted(() => {
                         class="mr-2 h-4 w-4"
                     />
 
-                    Save transaction
+                    {{
+                        isEditMode
+                            ? 'Update transaction'
+                            : 'Save transaction'
+                    }}
                 </NuxtButton>
             </div>
         </div>
