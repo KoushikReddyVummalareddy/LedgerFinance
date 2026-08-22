@@ -34,7 +34,10 @@ class TransactionService implements TransactionServiceInterface
         int $id,
         TransactionRequest $request
     ): Transaction {
-        $transaction = Transaction::findOrFail($id);
+        $transaction = Transaction::where(
+            'user_id',
+            auth()->id()
+        )->findOrFail($id);
 
         $transaction->category_id = $request->category_id;
         $transaction->title = $request->title;
@@ -57,8 +60,9 @@ class TransactionService implements TransactionServiceInterface
         ?string $fromDate = null,
         ?string $toDate = null
     ): LengthAwarePaginator {
-
-        $query = Transaction::query()->orderByDesc('transaction_date');
+        $query = Transaction::query()
+            ->where('user_id', auth()->id())
+            ->orderByDesc('transaction_date');
 
         if ($type) {
             $query->where('type', $type);
@@ -69,15 +73,27 @@ class TransactionService implements TransactionServiceInterface
         }
 
         if ($search) {
-            $query->where('title', 'like', "%{$search}%");
+            $query->where(
+                'title',
+                'like',
+                "%{$search}%"
+            );
         }
 
         if ($fromDate) {
-            $query->whereDate('transaction_date', '>=', $fromDate);
+            $query->whereDate(
+                'transaction_date',
+                '>=',
+                $fromDate
+            );
         }
 
         if ($toDate) {
-            $query->whereDate('transaction_date', '<=', $toDate);
+            $query->whereDate(
+                'transaction_date',
+                '<=',
+                $toDate
+            );
         }
 
         return $this->getPaginatedResults(
@@ -90,13 +106,19 @@ class TransactionService implements TransactionServiceInterface
     public function getTransactionById(
         int $id
     ): Transaction {
-        return Transaction::findOrFail($id);
+        return Transaction::where(
+            'user_id',
+            auth()->id()
+        )->findOrFail($id);
     }
 
     public function deleteTransaction(
         int $id
     ): Transaction {
-        $transaction = Transaction::findOrFail($id);
+        $transaction = Transaction::where(
+            'user_id',
+            auth()->id()
+        )->findOrFail($id);
 
         $transaction->delete();
 
